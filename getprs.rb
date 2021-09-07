@@ -28,6 +28,15 @@ QUERY = ENV["GITHUB_PR_GRAPHQL_QUERY"] || %{{
   }
 }}
 
+def display_and_exit(err)
+	alfred_item = {
+		"title" => err
+	}
+	res = { items: [alfred_item] }.to_json
+	puts res
+	Process.exit(0)
+end
+
 def fetch_prs_from_http
 	response = Net::HTTP.post URI("https://api.github.com/graphql"),
 	{ "query" => QUERY}.to_json,
@@ -35,6 +44,9 @@ def fetch_prs_from_http
 	"Content-Type" => "application/json"
 
 	responseJSON = JSON.parse(response.body)
+	if response.code != "200"
+		display_and_exit("Cannot fetch GitHub: #{response.code}")
+	end
 	prs = responseJSON.dig("data", "viewer", "pullRequests", "nodes")
 	prs
 end
@@ -76,10 +88,7 @@ def pr_to_alfred_items(prs)
 		}
 	end
 	if alfred_items.empty?
-		alfred_items = [{
-			"title" => "No results",
-			"arg" => ""
-		}]
+		display_and_exit("No PRs found")
 	end
 
 	{ items: alfred_items }.to_json

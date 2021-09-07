@@ -79,9 +79,10 @@
 				<key>runningsubtext</key>
 				<string>Fetching</string>
 				<key>script</key>
-				<string>GITHUB_TOKEN=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 # replace with token
+				<string>export GITHUB_TOKEN={var:GITHUB_TOKEN}
+# replace with token
 
-GITHUB_PR_GRAPHQL_QUERY="{
+export GITHUB_PR_GRAPHQL_QUERY="{
   viewer {
     pullRequests(first: 100, states: OPEN) {
       totalCount
@@ -141,6 +142,15 @@ GITHUB_PR_GRAPHQL_QUERY="{
 			<integer>170</integer>
 		</dict>
 	</dict>
+	<key>variables</key>
+	<dict>
+		<key>GITHUB_TOKEN</key>
+		<string></string>
+	</dict>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string>0.0.1</string>
 	<key>webaddress</key>
 	<string></string>
 </dict>
